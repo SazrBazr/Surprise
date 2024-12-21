@@ -51,7 +51,6 @@
         #tree-builder {
             display: none;
             text-align: center;
-            align-items: center;
         }
         .tree-part {
             margin: 10px;
@@ -82,19 +81,21 @@
     </div>
     <div id="tree-builder">
         <h1>Build Your Christmas Tree</h1>
-        <p id="heart-message">From my hearts to yours, may your holiday be filled with joy and love!</p>
+        <p id="heart-message">From our hearts to yours, may your holiday be filled with joy and love!</p>
         <div>
-            <img class="tree-part" src="go.png" draggable="true" ondragstart="drag(event)" alt="Gold Ornament">
-            <img class="tree-part" src="gro.png" draggable="true" ondragstart="drag(event)" alt="Green Ornament">
-            <img class="tree-part" src="dbo.png" draggable="true" ondragstart="drag(event)" alt="Dark Blue Ornament">
-            <img class="tree-part" src="ro.png" draggable="true" ondragstart="drag(event)" alt="Red Ornament">
-            <img class="tree-part" src="po.png" draggable="true" ondragstart="drag(event)" alt="Purple Ornament">
-            <img class="tree-part" src="bo.png" draggable="true" ondragstart="drag(event)" alt="Blue Ornament">
+            <img class="tree-part" src="ro.png" draggable="true" ontouchstart="dragTouchStart(event)" alt="Red Ornament">
+            <img class="tree-part" src="go.png" draggable="true" ontouchstart="dragTouchStart(event)" alt="Gold Ornament">
+            <img class="tree-part" src="bo.png" draggable="true" ontouchstart="dragTouchStart(event)" alt="Blue Ornament">
+            <img class="tree-part" src="gro.png" draggable="true" ontouchstart="dragTouchStart(event)" alt="Green Ornament">
+            <img class="tree-part" src="dbo.png" draggable="true" ontouchstart="dragTouchStart(event)" alt="Dark Blue Ornament">
+            <img class="tree-part" src="po.png" draggable="true" ontouchstart="dragTouchStart(event)" alt="Purple Ornament">
         </div>
-        <div class="tree-container" id="tree-container" ondragover="allowDrop(event)" ondrop="drop(event)"></div>
+        <div class="tree-container" id="tree-container" ontouchmove="touchMove(event)" ontouchend="dropTouch(event)" ondragover="allowDrop(event)" ondrop="drop(event)"></div>
     </div>
 
     <script>
+        let touchDragData = null;
+
         function openTreeBuilder() {
             document.getElementById('gift').style.display = 'none';
             document.getElementById('tree-builder').style.display = 'block';
@@ -111,15 +112,36 @@
         function drop(event) {
             event.preventDefault();
             const data = event.dataTransfer.getData('text');
+            appendOrnament(event.offsetX, event.offsetY, data);
+        }
+
+        function dragTouchStart(event) {
+            touchDragData = event.target.outerHTML;
+        }
+
+        function touchMove(event) {
+            event.preventDefault();
+        }
+
+        function dropTouch(event) {
+            if (!touchDragData) return;
+            const rect = event.target.getBoundingClientRect();
+            const x = event.changedTouches[0].clientX - rect.left;
+            const y = event.changedTouches[0].clientY - rect.top;
+            appendOrnament(x, y, touchDragData);
+            touchDragData = null;
+        }
+
+        function appendOrnament(x, y, data) {
             const treeContainer = document.getElementById('tree-container');
             const tempDiv = document.createElement('div');
             tempDiv.innerHTML = data;
             const ornament = tempDiv.firstChild;
             ornament.style.position = 'absolute';
-            ornament.style.left = `${event.offsetX - 20}px`;
-            ornament.style.top = `${event.offsetY - 20}px`;
+            ornament.style.left = `${x - 20}px`;
+            ornament.style.top = `${y - 20}px`;
             ornament.draggable = true;
-            ornament.ondragstart = drag;
+            ornament.ontouchstart = dragTouchStart;
             treeContainer.appendChild(ornament);
         }
     </script>
