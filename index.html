@@ -51,20 +51,20 @@
         #tree-builder {
             display: none;
             text-align: center;
+            align-items: center;
         }
         .tree-part {
             margin: 10px;
             cursor: grab;
             display: inline-block;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
+            width: 40px;
+            height: 40px;
         }
         .tree-container {
             margin-top: 20px;
             position: relative;
-            width: 300px;
-            height: 400px;
+            width: 600px;
+            height: 600px;
             background: url('christmasTree.png') no-repeat center center;
             background-size: cover;
         }
@@ -82,11 +82,14 @@
     </div>
     <div id="tree-builder">
         <h1>Build Your Christmas Tree</h1>
-        <p id="heart-message">From our hearts to yours, may your holiday be filled with joy and love!</p>
+        <p id="heart-message">From my hearts to yours, may your holiday be filled with joy and love!</p>
         <div>
-            <div class="tree-part" style="background-color: red;" draggable="true" ondragstart="drag(event)"></div>
-            <div class="tree-part" style="background-color: gold;" draggable="true" ondragstart="drag(event)"></div>
-            <div class="tree-part" style="background-color: blue;" draggable="true" ondragstart="drag(event)"></div>
+            <img class="tree-part" src="go.png" draggable="true" ondragstart="drag(event)" alt="Gold Ornament">
+            <img class="tree-part" src="gro.png" draggable="true" ondragstart="drag(event)" alt="Green Ornament">
+            <img class="tree-part" src="dbo.png" draggable="true" ondragstart="drag(event)" alt="Dark Blue Ornament">
+            <img class="tree-part" src="ro.png" draggable="true" ondragstart="drag(event)" alt="Red Ornament">
+            <img class="tree-part" src="po.png" draggable="true" ondragstart="drag(event)" alt="Purple Ornament">
+            <img class="tree-part" src="bo.png" draggable="true" ondragstart="drag(event)" alt="Blue Ornament">
         </div>
         <div class="tree-container" id="tree-container" ondragover="allowDrop(event)" ondrop="drop(event)"></div>
     </div>
@@ -102,26 +105,23 @@
         }
 
         function drag(event) {
-            event.dataTransfer.setData('text', event.target.id);
+            event.dataTransfer.setData('text', event.target.outerHTML);
         }
 
         function drop(event) {
             event.preventDefault();
-            const id = event.dataTransfer.getData('text');
-            const draggedElement = document.getElementById(id);
-            const clone = draggedElement.cloneNode(true);
-            clone.style.position = 'absolute';
-            clone.style.left = `${event.offsetX - 30}px`;
-            clone.style.top = `${event.offsetY - 30}px`;
-            clone.draggable = true;
-            clone.ondragstart = drag;
-            event.target.appendChild(clone);
+            const data = event.dataTransfer.getData('text');
+            const treeContainer = document.getElementById('tree-container');
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = data;
+            const ornament = tempDiv.firstChild;
+            ornament.style.position = 'absolute';
+            ornament.style.left = `${event.offsetX - 20}px`;
+            ornament.style.top = `${event.offsetY - 20}px`;
+            ornament.draggable = true;
+            ornament.ondragstart = drag;
+            treeContainer.appendChild(ornament);
         }
-
-        // Add unique IDs to ornaments dynamically
-        document.querySelectorAll('.tree-part').forEach((part, index) => {
-            part.id = `ornament-${index}`;
-        });
     </script>
 </body>
 </html>
