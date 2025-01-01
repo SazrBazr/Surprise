@@ -3,147 +3,138 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Christmas Magic</title>
+    <title>Interactive New Year Gift Card</title>
     <style>
         body {
             margin: 0;
-            font-family: Arial, sans-serif;
-            background-color: #002b5c;
+            font-family: 'Poppins', sans-serif;
+            background: radial-gradient(circle at center, #121212, #1d1d1d, #2a2a2a);
             color: #fff;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
             overflow: hidden;
         }
-        .gift-box {
-            width: 200px;
-            height: 200px;
-            background-color: #d32f2f;
-            border: 4px solid #fbc02d;
-            border-radius: 10px;
-            position: relative;
+
+        .card {
+            width: 500px;
+            height: 700px;
+            background: linear-gradient(145deg, #ff7eb3, #ffcc80);
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
             cursor: pointer;
-            animation: bounce 1.5s infinite;
-        }
-        .gift-box::before, .gift-box::after {
-            content: '';
-            position: absolute;
-            background-color: #fbc02d;
-        }
-        .gift-box::before {
-            width: 20px;
-            height: 200px;
-            top: 0;
-            left: 90px;
-        }
-        .gift-box::after {
-            width: 200px;
-            height: 20px;
-            top: 90px;
-            left: 0;
-        }
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-15px); }
-        }
-        #tree-builder {
-            display: none;
-            text-align: center;
-        }
-        .tree-part {
-            margin: 10px;
-            cursor: grab;
-            display: inline-block;
-            width: 40px;
-            height: 40px;
-        }
-        .tree-container {
-            margin-top: 20px;
             position: relative;
-            width: 600px;
-            height: 600px;
-            background: url('christmasTree.png') no-repeat center center;
-            background-size: cover;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
         }
-        #heart-message {
+
+        .card.open {
+            transform: rotateY(180deg);
+        }
+
+        .card-content {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 20px;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .front {
+            background: linear-gradient(145deg, #ff7eb3, #ffcc80);
+            color: white;
+            font-size: 2rem;
+            font-weight: bold;
+            text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .back {
+            background: #1d1d1d;
+            color: white;
+            font-size: 1.5rem;
+            text-align: center;
+            padding: 30px;
+            transform: rotateY(180deg);
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .back h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: #ffcc80;
+        }
+
+        .back p {
+            margin: 10px 0;
             font-size: 1.2rem;
-            margin-top: 20px;
-            color: #fbc02d;
+            line-height: 1.8;
+        }
+
+        .stars {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1500212802521-de7d7426f496?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D') no-repeat center center/cover;
+            opacity: 0.3;
+            z-index: -1;
+        }
+
+        @media (max-width: 600px) {
+            .card {
+                width: 90%;
+                height: auto;
+                aspect-ratio: 5 / 3;
+            }
+
+            .front, .back {
+                font-size: 1.2rem;
+            }
+
+            .back h1 {
+                font-size: 2rem;
+            }
+
+            .back p {
+                font-size: 1rem;
+            }
         }
     </style>
 </head>
 <body>
-    <div id="gift">
-        <div class="gift-box" onclick="openTreeBuilder()"></div>
-        <p>Click the gift to start!</p>
-    </div>
-    <div id="tree-builder">
-        <h1>Build Your Christmas Tree</h1>
-        <p id="heart-message">From our hearts to yours, may your holiday be filled with joy and love!</p>
-        <div>
-            <img class="tree-part" src="ro.png" draggable="true" ontouchstart="dragTouchStart(event)" alt="Red Ornament">
-            <img class="tree-part" src="go.png" draggable="true" ontouchstart="dragTouchStart(event)" alt="Gold Ornament">
-            <img class="tree-part" src="bo.png" draggable="true" ontouchstart="dragTouchStart(event)" alt="Blue Ornament">
-            <img class="tree-part" src="gro.png" draggable="true" ontouchstart="dragTouchStart(event)" alt="Green Ornament">
-            <img class="tree-part" src="dbo.png" draggable="true" ontouchstart="dragTouchStart(event)" alt="Dark Blue Ornament">
-            <img class="tree-part" src="po.png" draggable="true" ontouchstart="dragTouchStart(event)" alt="Purple Ornament">
+    <div class="stars"></div>
+    <div class="card" id="card">
+        <div class="card-content front">
+            Tap to Open ✨
         </div>
-        <div class="tree-container" id="tree-container" ontouchmove="touchMove(event)" ontouchend="dropTouch(event)" ondragover="allowDrop(event)" ondrop="drop(event)"></div>
+        <div class="card-content back">
+            <h1>Happy New Year, Leslye!</h1>
+            <p>
+                As the new year begins, I just want to let you know how much you mean to me.
+                You are truly special and one of a kind. 💖
+            </p>
+            <p>
+                May 2025 be filled with magical moments, unforgettable memories, and dreams that come true.
+                Thank you for being the amazing person you are.✨
+            </p>
+        </div>
     </div>
 
     <script>
-        let touchDragData = null;
+        const card = document.getElementById('card');
 
-        function openTreeBuilder() {
-            document.getElementById('gift').style.display = 'none';
-            document.getElementById('tree-builder').style.display = 'block';
-        }
-
-        function allowDrop(event) {
-            event.preventDefault();
-        }
-
-        function drag(event) {
-            event.dataTransfer.setData('text', event.target.outerHTML);
-        }
-
-        function drop(event) {
-            event.preventDefault();
-            const data = event.dataTransfer.getData('text');
-            appendOrnament(event.offsetX, event.offsetY, data);
-        }
-
-        function dragTouchStart(event) {
-            touchDragData = event.target.outerHTML;
-        }
-
-        function touchMove(event) {
-            event.preventDefault();
-        }
-
-        function dropTouch(event) {
-            if (!touchDragData) return;
-            const rect = event.target.getBoundingClientRect();
-            const x = event.changedTouches[0].clientX - rect.left;
-            const y = event.changedTouches[0].clientY - rect.top;
-            appendOrnament(x, y, touchDragData);
-            touchDragData = null;
-        }
-
-        function appendOrnament(x, y, data) {
-            const treeContainer = document.getElementById('tree-container');
-            const tempDiv = document.createElement('div');
-            tempDiv.innerHTML = data;
-            const ornament = tempDiv.firstChild;
-            ornament.style.position = 'absolute';
-            ornament.style.left = `${x - 20}px`;
-            ornament.style.top = `${y - 20}px`;
-            ornament.draggable = true;
-            ornament.ontouchstart = dragTouchStart;
-            treeContainer.appendChild(ornament);
-        }
+        card.addEventListener('click', () => {
+            card.classList.toggle('open');
+        });
     </script>
 </body>
 </html>
